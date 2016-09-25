@@ -1,0 +1,75 @@
+
+<div class="container">
+  <div class="row row-content" ng-controller="DishDetailController">
+    <div class="col-xs-12 bg-warning" ng-if="!showDish" ng-class="{'bg-danger': (msg.indexOf('Err') != -1) }">
+      <h3>{{ msg }}</h3>
+    </div>
+    <div  ng-if="showDish">
+      <div class="col-xs-12">
+        <button class="btn btn-primary btn-xs pull-right" type="button" ui-sref="app.menu">Back to Menu</button>
+        <div class="media">
+          <div class="media-left media-middle"><a href="#"><img ng-src="{{ dish.image }}" alt="" class="img-thumbnail media-object"></a>
+          </div>
+          <div class="media-body">
+            <h2 class="media-heading">
+              {{ dish.name }}
+              <span class="label label-danger">{{ dish.label }}</span>
+              <span class="badge">{{ dish.price | currency }}</span>
+            </h2>
+            <p>{{ dish.description }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-9 col-xs-offset-1">
+        <h4><strong>Customer Comments</strong> <small class="small">Sort by: <input type="text" ng-model="orderText"></small></h4>
+        <div class="" ng-repeat="comment in dish.comments | orderBy:orderText">
+          <blockquote>
+            <p>{{ comment.rating }} Stars</p>
+            <p>{{ comment.comment }}</p>
+            <footer>{{ comment.author }}, {{ comment.date | date }}</footer>
+          </blockquote>
+        </div>
+      </div>
+      <div class="col-xs-9 col-xs-offset-1" ng-controller="DishCommentController">
+        <ul class="list-unstyled">
+          <blockquote ng-show="commentForm.$valid && commentForm.$dirty">
+            <p>{{ mycomment.rating }} Stars</p>
+            <p>{{ mycomment.comment }}</p>
+            <footer>{{ mycomment.author }}</footer>
+          </blockquote>
+        </ul>
+        <form class="form-horizontal" name="commentForm" ng-submit="submitComment()" novalidate>
+          <div class="form-group" ng-class="{ 'has-error': commentForm.name.$error.required && !commentForm.name.$pristine }">
+            <label for="name" class="control-label col-sm-2">Your Name</label>
+            <div class="col-sm-10">
+              <input ng-model="mycomment.author" type="text" class="form-control" name="name" id="name" required>
+              <span class="help-block" ng-show="commentForm.name.$error.required && !commentForm.name.$pristine">Your Name is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2">Number of Stars</label>
+            <div class="col-sm-10">
+              <input ng-model="mycomment.rating" type="radio" name="stars" class="form-control-static radio-inline" value="1"> 1
+              <input ng-model="mycomment.rating" type="radio" name="stars" class="form-control-static radio-inline" value="2"> 2
+              <input ng-model="mycomment.rating" type="radio" name="stars" class="form-control-static radio-inline" value="3"> 3
+              <input ng-model="mycomment.rating" type="radio" name="stars" class="form-control-static radio-inline" value="4"> 4
+              <input ng-model="mycomment.rating" type="radio" name="stars" class="form-control-static radio-inline" value="5"> 5
+            </div>
+          </div>
+          <div class="form-group" ng-class="{ 'has-error': commentForm.mycomment.$error.required && commentForm.mycomment.$dirty }">
+            <label for="comment" class="control-label col-sm-2">Your Comments</label>
+            <div class="col-sm-10">
+              <textarea ng-model="mycomment.comment" name="comment" id="comment" rows="10" class="form-control" required></textarea>
+              <span class="help-block" ng-show="commentForm.mycomment.$error.required && commentForm.mycomment.$dirty">Your comments are required.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary" ng-disabled="commentForm.$invalid">Submit Comment</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
